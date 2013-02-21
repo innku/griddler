@@ -89,6 +89,80 @@ describe Griddler::Email, 'body formatting' do
     body_from_email(:text, body).should eq 'Hello.'
   end
 
+  it 'handles "El [date] [soandso]\n<email@example.com> escribió:" format' do
+    body = <<-EOF
+      Hello.
+
+      El 2010-01-01 12:00:00 Tristan\n <email@example.com> escribió:
+      > Check out this report.
+      >
+      > It's pretty cool.
+      >
+      > Thanks, Tristan
+    EOF
+
+    body_from_email(:text, body).should eq 'Hello.'
+  end
+
+  it 'handles "Date [something] Untitled Document:" hotmail format' do
+    body = <<-EOF
+      Hello.
+
+      Date: Mon, 25 Jun 2012 20:07:18 -0500
+      From: 3d44da9ba9ff5f02a69a+THREADID99@cloudmailin.net
+      To: e3matheus28@hotmail.com
+      Subject: Han contestado tu comentario en una receta
+
+      Untitled Document
+    EOF
+
+    body_from_email(:text, body).should eq 'Hello.'
+  end
+
+  it 'handles "Date [something] Cuerpo del mensaje:" hotmail es format' do
+    body = <<-EOF
+      Hello.
+
+      Date: Mon, 25 Jun 2012 20:07:18 -0500
+      From: 3d44da9ba9ff5f02a69a+THREADID99@cloudmailin.net
+      To: e3matheus28@hotmail.com
+      Subject: Han contestado tu comentario en una receta
+
+      Cuerpo del Mensaje
+    EOF
+
+    body_from_email(:text, body).should eq 'Hello.'
+  end
+
+  it 'handles "To [something] Untitled Document" yahoo format' do
+    body = <<-EOF
+      Hello.
+
+      To: Pris yahoo <priscilla_glz18@yahoo.com>
+      Sent: Tuesday, June 26, 2012 6:56 PM
+      Subject: Han contestado tu comentario en una receta
+
+      Untitled Document
+    EOF
+
+    body_from_email(:text, body).should eq 'Hello.'
+  end
+
+  it 'handles "De [something] Untitled Document" yahoo es format' do
+    body = <<-EOF
+      Hello.
+
+      De: Cocina y Comparte <notificaciones@cocinaycomparte.com>
+      Para: Otro Elias <e3matheus@yahoo.com>
+      Enviado: Miércoles, 27 de junio, 2012 14:23:07
+      Asunto: Han contestado tu comentario en una receta
+
+      Untitled Document
+    EOF
+
+    body_from_email(:text, body).should eq 'Hello.'
+  end
+
   it 'handles "-----Original Message-----" format' do
     body = <<-EOF
       Hello.

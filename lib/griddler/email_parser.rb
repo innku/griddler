@@ -1,3 +1,5 @@
+# encoding: utf-8
+#
 # Parse emails from their full format into a hash containing full email, host,
 # local token, and the raw argument.
 #
@@ -33,6 +35,11 @@ module EmailParser
         end.
         join("\n").
         gsub(/^\s*On.*\r?\n?\s*.*\s*wrote:$/,'').
+        gsub(/^\s*El.*\r?\n?\s*.*\s*escribió?:$/,'').
+        gsub(/^\s*Date:.*Untitled Document.*?/m,'').
+        gsub(/^\s*Date:.*Cuerpo del Mensaje.*?/m,'').
+        gsub(/^\s*To:.*Untitled Document.*?/m,'').
+        gsub(/^\s*De:.*Untitled Document.*?/m,'').
         strip
     end
   end
